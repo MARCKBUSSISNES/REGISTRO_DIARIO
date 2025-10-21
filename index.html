@@ -133,9 +133,9 @@ body {
 .card h3 { font-size: 14px; color:#555; }
 .card p { font-size: 20px; font-weight: bold; color:#1e2a38; }
 
-/* Botón sistema de cobro */
-#btnCobroContainer { text-align:center; margin:20px 0; }
-#btnCobroContainer button {
+/* Botones */
+#btnCobroContainer, #btnEnviarCobroContainer { text-align:center; margin:20px 0; }
+#btnCobroContainer button, #btnEnviarCobroContainer button {
     padding:12px 25px;
     font-size:16px;
     cursor:pointer;
@@ -145,8 +145,9 @@ body {
     color:white;
     font-weight:bold;
     transition:0.3s;
+    margin-bottom:10px;
 }
-#btnCobroContainer button:hover { background-color:#019870; transform:scale(1.05); }
+#btnCobroContainer button:hover, #btnEnviarCobroContainer button:hover { background-color:#019870; transform:scale(1.05); }
 
 /* Formulario de ventas */
 .flex { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px; }
@@ -216,9 +217,12 @@ canvas { margin-top:30px; background:#fff; padding:15px; border-radius:8px; }
         </div>
     </div>
 
-    <!-- Botón Sistema de Cobro -->
+    <!-- Botones Sistema de Cobro -->
     <div id="btnCobroContainer">
-        <button onclick="abrirSistemaCobro()">Sistema de Cobro</button>
+        <button onclick="abrirSistemaCobro()">Abrir Sistema de Cobro</button>
+    </div>
+    <div id="btnEnviarCobroContainer">
+        <button onclick="enviarProductoAlCobro()">Enviar producto al Sistema de Cobro</button>
     </div>
 
     <!-- Registro -->
@@ -279,6 +283,18 @@ function verificarPassword() {
 function abrirSistemaCobro() {
     ventanaCobro = window.open('https://marckbussisnes.github.io/SISTEMA_DE_COBRO_GENERAL/', 'sistemaCobro');
     ventanaCobro.focus();
+}
+
+// Nueva función para enviar producto
+function enviarProductoAlCobro() {
+    // Datos del producto (puedes vincularlo a inputs si quieres)
+    const nombre = "Ejemplo Producto";
+    const precio = 50;
+    const stock = 10;
+
+    const url = `https://marckbussisnes.github.io/SISTEMA_DE_COBRO_GENERAL/?nombre=${encodeURIComponent(nombre)}&precio=${precio}&stock=${stock}`;
+    let ventana = window.open(url, 'sistemaCobro');
+    ventana.focus();
 }
 
 function agregarVenta() {
@@ -357,25 +373,29 @@ function actualizarGrafica(filtradas=null){
     if(grafica) grafica.destroy();
     grafica=new Chart(ctx,{
         type:'bar',
-        data:{ labels:etiquetas, datasets:[
-            {label:'Efectivo', data:efectivo, backgroundColor:'#1e90ff'},
-            {label:'Tarjeta', data:tarjeta, backgroundColor:'#00b894'}
-        ]},
+        data:{
+            labels:etiquetas,
+            datasets:[
+                {label:'Efectivo',data:efectivo,backgroundColor:'#00b894'},
+                {label:'Tarjeta',data:tarjeta,backgroundColor:'#0984e3'}
+            ]
+        },
         options:{
             responsive:true,
-            plugins:{title:{display:true,text:'Ventas Diarias',color:'#333',font:{size:20}},legend:{labels:{color:'#333'}}},
-            scales:{x:{ticks:{color:'#333'},grid:{color:'rgba(0,0,0,0.05)'}},y:{beginAtZero:true,ticks:{color:'#333'},grid:{color:'rgba(0,0,0,0.05)'}}},
-            animation:{duration:800}
+            plugins:{ legend:{ position:'top' }, title:{ display:true, text:'Ventas Diarias' } },
+            scales:{ y:{ beginAtZero:true } }
         }
     });
 }
 
 function mostrarSeccion(seccion){
-    if(seccion==='registro') document.getElementById('registro').scrollIntoView({behavior:'smooth'});
-    if(seccion==='filtro') document.getElementById('filtro').scrollIntoView({behavior:'smooth'});
-    sidebar.style.left="-250px";
+    document.getElementById('registro').style.display='none';
+    document.getElementById('filtro').style.display='none';
+    if(seccion==='registro') document.getElementById('registro').style.display='block';
+    if(seccion==='filtro') document.getElementById('filtro').style.display='block';
 }
 </script>
 </body>
 </html>
+
 
