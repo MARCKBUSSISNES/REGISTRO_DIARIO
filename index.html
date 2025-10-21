@@ -3,204 +3,245 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control de Ventas Corporativo</title>
+<title>Dashboard de Ventas Corporativo</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body {
-        font-family: 'Roboto', sans-serif;
-        background: #f4f6f8;
-        display: flex;
-        min-height: 100vh;
-        color: #333;
-    }
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #333;
+}
 
-    /* MENU HAMBURGUESA */
-    .sidebar {
-        position: fixed;
-        left: -250px;
-        width: 250px;
-        height: 100%;
-        background-color: #1e2a38;
-        padding-top: 50px;
-        transition: 0.3s;
-        z-index: 1000;
-    }
+/* LOGIN */
+#loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-    .sidebar a {
-        display: block;
-        padding: 15px 30px;
-        text-decoration: none;
-        color: #fff;
-        font-weight: 500;
-        transition: 0.2s;
-    }
+.loginCard {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
 
-    .sidebar a:hover { background-color: #0d1b28; }
+.loginCard h2 {
+    margin-bottom: 25px;
+    color: #1e2a38;
+}
 
-    #menuToggle {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1100;
-        cursor: pointer;
-        font-size: 24px;
-        color: #1e2a38;
-    }
+.loginCard input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: 0.3s;
+}
 
-    .container {
-        margin: 30px auto;
-        padding: 30px;
-        background: #fff;
-        border-radius: 12px;
-        width: 95%;
-        max-width: 1000px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        transition: margin-left 0.3s ease;
-    }
+.loginCard input:focus { border-color: #1e90ff; box-shadow: 0 0 8px rgba(30,144,255,0.3); }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 25px;
-        color: #1e2a38;
-    }
+.loginCard button {
+    width: 100%;
+    padding: 12px;
+    border:none;
+    border-radius: 8px;
+    background-color: #1e90ff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-    input, button {
-        padding: 10px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        font-size: 15px;
-    }
+.loginCard button:hover { background-color: #1c7ed6; transform: scale(1.03); }
 
-    input[type="number"] { width: 100%; }
+#loginError { color: red; margin-top: 10px; display:none; }
 
-    button {
-        cursor: pointer;
-        font-weight: bold;
-        border: none;
-        transition: 0.2s;
-    }
+/* DASHBOARD */
+.sidebar {
+    position: fixed;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #1e2a38;
+    padding-top: 60px;
+    transition: 0.3s;
+    z-index: 1000;
+}
 
-    .btn-primary { background-color: #1e90ff; color: white; }
-    .btn-primary:hover { background-color: #1c7ed6; }
+.sidebar a {
+    display: block;
+    padding: 15px 30px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: 0.2s;
+}
 
-    .btn-warning { background-color: #ffb703; color: #111; }
-    .btn-warning:hover { background-color: #e6a600; }
+.sidebar a:hover { background-color: #16202b; }
 
-    .btn-danger { background-color: #e63946; color: white; }
-    .btn-danger:hover { background-color: #d62839; }
+#menuToggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: #1e2a38;
+    cursor: pointer;
+    z-index: 1100;
+}
 
-    .flex { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-        border-radius: 6px;
-        overflow: hidden;
-    }
+.container {
+    margin: 30px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 1000px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: margin-left 0.3s ease;
+}
 
-    th, td {
-        padding: 12px;
-        text-align: left;
-    }
+/* Tarjetas resumen */
+.cards {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
-    th {
-        background-color: #1e2a38;
-        color: #fff;
-    }
+.card {
+    flex:1;
+    min-width: 150px;
+    background: #f7f9fc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
 
-    tr:nth-child(even) { background-color: #f4f6f8; }
-    tr:hover { background-color: #e0e0e0; transition: 0.2s; }
+.card:hover { transform: translateY(-3px); }
 
-    .total {
-        text-align: right;
-        font-weight: bold;
-        margin-top: 15px;
-        color: #1e2a38;
-    }
+.card h3 { font-size: 14px; color:#555; }
+.card p { font-size: 20px; font-weight: bold; color:#1e2a38; }
 
-    .filtro { margin-top: 20px; }
-    .filtro input { width: 150px; }
+/* Formulario de ventas */
+.flex { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px; }
+.flex input { padding:10px; border-radius:6px; border:1px solid #ccc; }
+button { cursor:pointer; font-weight:bold; border:none; transition:0.2s; border-radius:6px; }
+.btn-primary { background-color:#1e90ff; color:#fff; }
+.btn-primary:hover { background-color:#1c7ed6; }
+.btn-warning { background-color:#ffb703; color:#111; }
+.btn-warning:hover { background-color:#e6a600; }
+.btn-danger { background-color:#e63946; color:#fff; }
+.btn-danger:hover { background-color:#d62839; }
 
-    canvas { margin-top: 30px; background: #fff; padding: 15px; border-radius: 8px; }
+/* Tabla de ventas */
+table { width:100%; border-collapse: collapse; margin-top: 15px; border-radius:6px; overflow:hidden; }
+th, td { padding:12px; text-align:left; }
+th { background-color:#1e2a38; color:#fff; }
+tr:nth-child(even){background-color:#f4f6f8;}
+tr:hover { background-color:#e0e0e0; transition:0.2s; }
 
-    #login { text-align: center; margin-top: 50px; }
-    #login input { width: 250px; }
-    #login button { margin-left: 10px; }
+.total { text-align:right; font-weight:bold; margin-top:10px; color:#1e2a38; }
 
-    @media (max-width:768px){
-        .flex { flex-direction: column; }
-        .filtro input { width: 100%; }
-    }
+canvas { margin-top:30px; background:#fff; padding:15px; border-radius:8px; }
+
+.filtro input { width:150px; padding:8px; }
+
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 </style>
 </head>
 <body>
 
-<div id="menuToggle">&#9776;</div>
-<div class="sidebar" id="sidebar">
+<!-- LOGIN -->
+<div id="loginContainer">
+    <div class="loginCard">
+        <h2>Acceso Corporativo</h2>
+        <input type="password" id="password" placeholder="Ingrese código de acceso">
+        <button onclick="verificarPassword()">Ingresar</button>
+        <p id="loginError">Código incorrecto</p>
+    </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
     <a href="#" onclick="mostrarSeccion('registro')">Registro de Ventas</a>
     <a href="#" onclick="mostrarSeccion('filtro')">Filtrar Ventas</a>
     <a href="#" onclick="descargarCSV()">Descargar CSV</a>
     <a href="#" onclick="cerrarSesion()">Cerrar sesión</a>
 </div>
+<div id="menuToggle">&#9776;</div>
 
-<div class="container">
-    <h1>Control de Ventas Corporativo</h1>
+<!-- DASHBOARD -->
+<div class="container" id="app" style="display:none;">
+    <h1>Dashboard de Ventas</h1>
 
-    <!-- LOGIN -->
-    <div id="login">
-        <input type="password" id="password" placeholder="Ingrese el código de acceso">
-        <button onclick="verificarPassword()">Ingresar</button>
-        <p id="loginError" style="color:red; display:none;">Código incorrecto.</p>
+    <!-- Tarjetas resumen -->
+    <div class="cards">
+        <div class="card">
+            <h3>Total Efectivo</h3>
+            <p id="totalEfectivo">Q0.00</p>
+        </div>
+        <div class="card">
+            <h3>Total Tarjeta</h3>
+            <p id="totalTarjeta">Q0.00</p>
+        </div>
+        <div class="card">
+            <h3>Total General</h3>
+            <p id="totalGeneral">Q0.00</p>
+        </div>
     </div>
 
-    <!-- REGISTRO Y FILTRO -->
-    <div id="app" style="display:none;">
-
-        <!-- Registro de ventas -->
-        <div id="registro">
-            <div class="flex">
-                <input type="date" id="fecha">
-                <input type="number" id="efectivo" placeholder="Ventas en efectivo" min="0">
-                <input type="number" id="tarjeta" placeholder="Ventas con tarjeta" min="0">
-                <button class="btn-primary" onclick="agregarVenta()">Agregar registro</button>
-            </div>
+    <!-- Registro -->
+    <div id="registro">
+        <div class="flex">
+            <input type="date" id="fecha">
+            <input type="number" id="efectivo" placeholder="Ventas en efectivo" min="0">
+            <input type="number" id="tarjeta" placeholder="Ventas con tarjeta" min="0">
+            <button class="btn-primary" onclick="agregarVenta()">Agregar registro</button>
         </div>
-
-        <!-- Filtro -->
-        <div id="filtro" class="filtro">
-            <input type="date" id="fechaInicio">
-            <input type="date" id="fechaFin">
-            <button class="btn-warning" onclick="filtrarFechas()">Filtrar</button>
-            <button class="btn-primary" onclick="mostrarTodo()">Mostrar todo</button>
-        </div>
-
-        <!-- Tabla de ventas -->
-        <table id="tablaVentas">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Efectivo (Q)</th>
-                    <th>Tarjeta (Q)</th>
-                    <th>Total (Q)</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <p class="total">Total acumulado: Q<span id="totalAcumulado">0.00</span></p>
-
-        <!-- Gráfica -->
-        <canvas id="graficaVentas"></canvas>
     </div>
+
+    <!-- Filtro -->
+    <div id="filtro" class="filtro">
+        <input type="date" id="fechaInicio">
+        <input type="date" id="fechaFin">
+        <button class="btn-warning" onclick="filtrarFechas()">Filtrar</button>
+        <button class="btn-primary" onclick="mostrarTodo()">Mostrar todo</button>
+    </div>
+
+    <!-- Tabla de ventas -->
+    <table id="tablaVentas">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Efectivo (Q)</th>
+                <th>Tarjeta (Q)</th>
+                <th>Total (Q)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <p class="total">Total acumulado: Q<span id="totalAcumulado">0.00</span></p>
+
+    <!-- Gráfica -->
+    <canvas id="graficaVentas"></canvas>
 </div>
 
 <script>
 let sidebar = document.getElementById('sidebar');
 document.getElementById('menuToggle').onclick = () => {
-    if(sidebar.style.left === "0px"){ sidebar.style.left = "-250px"; }
-    else{ sidebar.style.left = "0px"; }
+    sidebar.style.left = sidebar.style.left === "0px" ? "-250px" : "0px";
 };
 
 const passwordCorrecto = "22782522";
@@ -209,51 +250,57 @@ let ventas = [];
 function verificarPassword() {
     const pass = document.getElementById('password').value;
     if(pass === passwordCorrecto){
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-    } else { document.getElementById('loginError').style.display = 'block'; }
+        document.getElementById('loginContainer').style.display='none';
+        document.getElementById('app').style.display='block';
+    } else { document.getElementById('loginError').style.display='block'; }
 }
 
 function agregarVenta() {
     const fecha = document.getElementById('fecha').value;
     const efectivo = parseFloat(document.getElementById('efectivo').value);
     const tarjeta = parseFloat(document.getElementById('tarjeta').value);
-
-    if(!fecha || isNaN(efectivo) || isNaN(tarjeta)){
-        alert("Ingrese datos válidos."); return;
-    }
-
-    ventas.push({fecha, efectivo, tarjeta, total: efectivo+tarjeta});
+    if(!fecha || isNaN(efectivo) || isNaN(tarjeta)){ alert("Ingrese datos válidos."); return; }
+    ventas.push({fecha, efectivo, tarjeta, total:efectivo+tarjeta});
     ventas.sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
     actualizarTabla();
+    actualizarResumen();
     actualizarGrafica();
     document.getElementById('fecha').value=''; document.getElementById('efectivo').value=''; document.getElementById('tarjeta').value='';
 }
 
 function actualizarTabla(filtradas=null){
-    const tbody = document.getElementById('tablaVentas').querySelector('tbody');
+    const tbody=document.getElementById('tablaVentas').querySelector('tbody');
     tbody.innerHTML="";
     let acumulado=0;
-    const lista = filtradas || ventas;
+    const lista=filtradas||ventas;
     lista.forEach(v=>{
-        const tr = document.createElement('tr');
+        const tr=document.createElement('tr');
         tr.innerHTML=`<td>${v.fecha}</td><td>Q${v.efectivo.toFixed(2)}</td><td>Q${v.tarjeta.toFixed(2)}</td><td>Q${v.total.toFixed(2)}</td>`;
         tbody.appendChild(tr); acumulado+=v.total;
     });
     document.getElementById('totalAcumulado').innerText=acumulado.toFixed(2);
 }
 
+function actualizarResumen(){
+    const totalE=ventas.reduce((a,b)=>a+b.efectivo,0);
+    const totalT=ventas.reduce((a,b)=>a+b.tarjeta,0);
+    const totalG=ventas.reduce((a,b)=>a+b.total,0);
+    document.getElementById('totalEfectivo').innerText="Q"+totalE.toFixed(2);
+    document.getElementById('totalTarjeta').innerText="Q"+totalT.toFixed(2);
+    document.getElementById('totalGeneral').innerText="Q"+totalG.toFixed(2);
+}
+
 function descargarCSV(){
-    let csv="Fecha,Efectivo,Tarjeta,Total\n";
+    let csv="Fecha,Efectivo, Tarjeta, Total\n";
     ventas.forEach(v=> csv+=`${v.fecha},${v.efectivo.toFixed(2)},${v.tarjeta.toFixed(2)},${v.total.toFixed(2)}\n`);
-    const blob = new Blob([csv],{type:'text/csv'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download=`ventas_diarias.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    const blob=new Blob([csv],{type:'text/csv'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=`ventas_diarias.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
 function cerrarSesion(){
     document.getElementById('app').style.display='none';
-    document.getElementById('login').style.display='block';
+    document.getElementById('loginContainer').style.display='flex';
     document.getElementById('password').value='';
     document.getElementById('loginError').style.display='none';
 }
@@ -276,31 +323,22 @@ function mostrarTodo(){
 // GRAFICA
 let grafica;
 function actualizarGrafica(filtradas=null){
-    const ctx = document.getElementById('graficaVentas').getContext('2d');
-    const lista = filtradas || ventas;
-    const etiquetas = lista.map(v=>v.fecha);
-    const efectivo = lista.map(v=>v.efectivo);
-    const tarjeta = lista.map(v=>v.tarjeta);
+    const ctx=document.getElementById('graficaVentas').getContext('2d');
+    const lista=filtradas||ventas;
+    const etiquetas=lista.map(v=>v.fecha);
+    const efectivo=lista.map(v=>v.efectivo);
+    const tarjeta=lista.map(v=>v.tarjeta);
     if(grafica) grafica.destroy();
-    grafica = new Chart(ctx,{
+    grafica=new Chart(ctx,{
         type:'bar',
-        data:{
-            labels:etiquetas,
-            datasets:[
-                {label:'Efectivo',data:efectivo,backgroundColor:'#1e90ff'},
-                {label:'Tarjeta',data:tarjeta,backgroundColor:'#00b894'}
-            ]
-        },
+        data:{ labels:etiquetas, datasets:[
+            {label:'Efectivo', data:efectivo, backgroundColor:'#1e90ff'},
+            {label:'Tarjeta', data:tarjeta, backgroundColor:'#00b894'}
+        ]},
         options:{
             responsive:true,
-            plugins:{
-                title:{display:true,text:'Ventas Diarias',color:'#333',font:{size:20}},
-                legend:{labels:{color:'#333'}}
-            },
-            scales:{
-                x:{ticks:{color:'#333'},grid:{color:'rgba(0,0,0,0.05)'}},
-                y:{beginAtZero:true,ticks:{color:'#333'},grid:{color:'rgba(0,0,0,0.05)'}}
-            },
+            plugins:{title:{display:true,text:'Ventas Diarias',color:'#333',font:{size:20}},legend:{labels:{color:'#333'}}},
+            scales:{x:{ticks:{color:'#333'},grid:{color:'rgba(0,0,0,0.05)'}},y:{beginAtZero:true,ticks:{color:'#333'},grid:{color:'rgba(0,0,0,0.05)'}}},
             animation:{duration:800}
         }
     });
@@ -314,3 +352,4 @@ function mostrarSeccion(seccion){
 </script>
 </body>
 </html>
+
