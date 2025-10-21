@@ -218,9 +218,7 @@ canvas { margin-top:30px; background:#fff; padding:15px; border-radius:8px; }
 
     <!-- Botón Sistema de Cobro -->
     <div id="btnCobroContainer">
-        <button onclick="window.open('https://marckbussisnes.github.io/SISTEMA_DE_COBRO_GENERAL/', '_blank')">
-            Sistema de Cobro
-        </button>
+        <button onclick="abrirSistemaCobro()">Sistema de Cobro</button>
     </div>
 
     <!-- Registro -->
@@ -268,6 +266,7 @@ document.getElementById('menuToggle').onclick = () => {
 
 const passwordCorrecto = "22782522";
 let ventas = [];
+let ventanaCobro = null;
 
 function verificarPassword() {
     const pass = document.getElementById('password').value;
@@ -275,6 +274,11 @@ function verificarPassword() {
         document.getElementById('loginContainer').style.display='none';
         document.getElementById('app').style.display='block';
     } else { document.getElementById('loginError').style.display='block'; }
+}
+
+function abrirSistemaCobro() {
+    ventanaCobro = window.open('https://marckbussisnes.github.io/SISTEMA_DE_COBRO_GENERAL/', 'sistemaCobro');
+    ventanaCobro.focus();
 }
 
 function agregarVenta() {
@@ -374,3 +378,4 @@ function mostrarSeccion(seccion){
 </script>
 </body>
 </html>
+
