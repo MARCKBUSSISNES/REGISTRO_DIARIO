@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Ventas Diarias - Empresa</title>
+<style>
+    /* --- Reset básico --- */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* --- Contenedor principal --- */
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        width: 90%;
+        max-width: 800px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+
+    /* --- Login --- */
+    #login {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #login input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: 100%;
+    }
+
+    #login button {
+        background-color: #2c3e50;
+        color: #fff;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #login button:hover {
+        background-color: #34495e;
+    }
+
+    /* --- Registro de ventas --- */
+    #ventas {
+        display: none;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #ventas input, #ventas button {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    #ventas button {
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #ventas button:hover {
+        background-color: #2ecc71;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #2c3e50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f4f6f8;
+    }
+
+    .total {
+        font-weight: bold;
+        text-align: right;
+        margin-top: 10px;
+        color: #2c3e50;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Registro de Ventas Diarias</h1>
+
+    <!-- Login -->
+    <div id="login">
+        <input type="password" id="password" placeholder="Ingrese el código de acceso">
+        <button onclick="verificarPassword()">Ingresar</button>
+        <p id="loginError" style="color:red; display:none;">Código incorrecto.</p>
+    </div>
+
+    <!-- Ventas -->
+    <div id="ventas">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="producto" placeholder="Nombre del producto" style="flex:2;">
+            <input type="number" id="cantidad" placeholder="Cantidad" min="1" style="flex:1;">
+            <input type="number" id="precio" placeholder="Precio unitario" min="0" step="0.01" style="flex:1;">
+            <button onclick="agregarVenta()" style="flex:1;">Agregar Venta</button>
+        </div>
+        
+        <table id="tablaVentas">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ventas se agregan aquí -->
+            </tbody>
+        </table>
+
+        <p class="total">Total del día: Q<span id="totalDia">0.00</span></p>
+        <button onclick="descargarCSV()">Descargar CSV</button>
+    </div>
+</div>
+
+<script>
+    const passwordCorrecto = "22782522";
+
+    function verificarPassword() {
+        const pass = document.getElementById('password').value;
+        if(pass === passwordCorrecto) {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('ventas').style.display = 'flex';
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    }
+
+    let ventas = [];
+
+    function agregarVenta() {
+        const producto = document.getElementById('producto').value.trim();
+        const cantidad = parseFloat(document.getElementById('cantidad').value);
+        const precio = parseFloat(document.getElementById('precio').value);
+
+        if(!producto || cantidad <= 0 || precio < 0) {
+            alert("Por favor ingrese datos válidos.");
+            return;
+        }
+
+        const total = cantidad * precio;
+        ventas.push({producto, cantidad, precio, total});
+        actualizarTabla();
+        limpiarCampos();
+    }
+
+    function actualizarTabla() {
+        const tbody = document.getElementById('tablaVentas').querySelector('tbody');
+        tbody.innerHTML = "";
+
+        let totalDia = 0;
+
+        ventas.forEach(venta => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${venta.producto}</td>
+                <td>${venta.cantidad}</td>
+                <td>Q${venta.precio.toFixed(2)}</td>
+                <td>Q${venta.total.toFixed(2)}</td>
+            `;
+            tbody.appendChild(tr);
+            totalDia += venta.total;
+        });
+
+        document.getElementById('totalDia').innerText = totalDia.toFixed(2);
+    }
+
+    function limpiarCampos() {
+        document.getElementById('producto').value = "";
+        document.getElementById('cantidad').value = "";
+        document.getElementById('precio').value = "";
+    }
+
+    // Descargar CSV
+    function descargarCSV() {
+        let csv = "Producto,Cantidad,Precio Unitario,Total\n";
+        ventas.forEach(v => {
+            csv += `${v.producto},${v.cantidad},${v.precio.toFixed(2)},${v.total.toFixed(2)}\n`;
+        });
+
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ventas_diarias.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+</body>
+</html>
