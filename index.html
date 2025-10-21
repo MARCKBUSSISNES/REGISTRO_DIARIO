@@ -133,6 +133,21 @@ body {
 .card h3 { font-size: 14px; color:#555; }
 .card p { font-size: 20px; font-weight: bold; color:#1e2a38; }
 
+/* Botón sistema de cobro */
+#btnCobroContainer { text-align:center; margin:20px 0; }
+#btnCobroContainer button {
+    padding:12px 25px;
+    font-size:16px;
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+    background-color:#00b894;
+    color:white;
+    font-weight:bold;
+    transition:0.3s;
+}
+#btnCobroContainer button:hover { background-color:#019870; transform:scale(1.05); }
+
 /* Formulario de ventas */
 .flex { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px; }
 .flex input { padding:10px; border-radius:6px; border:1px solid #ccc; }
@@ -199,6 +214,13 @@ canvas { margin-top:30px; background:#fff; padding:15px; border-radius:8px; }
             <h3>Total General</h3>
             <p id="totalGeneral">Q0.00</p>
         </div>
+    </div>
+
+    <!-- Botón Sistema de Cobro -->
+    <div id="btnCobroContainer">
+        <button onclick="window.open('https://marckbussisnes.github.io/SISTEMA_DE_COBRO_GENERAL/', '_blank')">
+            Sistema de Cobro
+        </button>
     </div>
 
     <!-- Registro -->
@@ -352,4 +374,3 @@ function mostrarSeccion(seccion){
 </script>
 </body>
 </html>
-
